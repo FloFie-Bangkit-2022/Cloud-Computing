@@ -5,7 +5,7 @@ const flowers = require('./flowers');
 
 const addFlowersHandler = (request, h) => {
   const {
-    name, year, author, summary, publisher, pageCount, readPage, reading, 
+    name, description, 
   } = request.payload;
 
   const id = nanoid(16);
@@ -15,22 +15,13 @@ const addFlowersHandler = (request, h) => {
 
   const newflower = {
     // eslint-disable-next-line max-len
-    name, year, author, summary, publisher, pageCount, readPage, reading, id, finished, insertedAt, updatedAt,
+    name, description,
   };
 
   if (name === undefined) {
     const response = h.response({
       status: 'fail',
       message: 'Gagal menambahkan Data. Mohon isi nama Data',
-    });
-    response.code(400);
-    return response;
-  }
-
-  if (pageCount < readPage) {
-    const response = h.response({
-      status: 'fail',
-      message: 'Gagal menambahkan Data. readPage tidak boleh lebih besar dari pageCount',
     });
     response.code(400);
     return response;
@@ -70,7 +61,7 @@ const getAllFlowersHandler = (request, h) => {
       flowers: flowersFilter.map((flower) => ({
         id: flower.id,
         name: flower.name,
-        publisher: flower.publisher,
+        description: flower.description,
       })),
     },
   });
@@ -106,7 +97,7 @@ const editFlowerByIdHandler = (request, h) => {
   const { id } = request.params;
 
   const {
-    name, year, author, summary, publisher, pageCount, readPage, reading,
+    name, description,
   } = request.payload;
   
   const updatedAt = new Date().toISOString();
@@ -120,29 +111,13 @@ const editFlowerByIdHandler = (request, h) => {
     return response;
   }
 
-  if (readPage > pageCount) {
-    const response = h.response({
-      status: 'fail',
-      message: 'Gagal memperbarui Data. readPage tidak boleh lebih besar dari pageCount',
-    });
-    response.code(400);
-    return response;
-  }
-
   const index = flowers.findIndex((flower) => flower.id === id);
 
   if (index !== -1) {
     flowers[index] = {
       ...flowers[index],
       name,
-      year,
-      author,
-      summary,
-      publisher,
-      pageCount,
-      readPage,
-      reading,
-      updatedAt,
+      description,
     };
 
     const response = h.response({
