@@ -13,6 +13,7 @@ const init = async () => {
   });
 
   server.route(routes);
+  server.route(routes_market);
 
   await server.start();
   console.log(`Server berjalan pada ${server.info.uri}`);
